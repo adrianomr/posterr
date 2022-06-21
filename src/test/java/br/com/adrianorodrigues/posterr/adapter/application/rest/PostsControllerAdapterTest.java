@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.adrianorodrigues.posterr.domain.Post;
+import br.com.adrianorodrigues.posterr.helper.context.AbstractContextMockDataBase;
 import br.com.adrianorodrigues.posterr.helper.pool.application.rest.PostsDtoPool;
 import br.com.adrianorodrigues.posterr.helper.pool.domain.PostsPool;
 import br.com.adrianorodrigues.posterr.usecase.CreatePost;

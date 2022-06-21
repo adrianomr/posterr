@@ -14,13 +14,14 @@ import org.springframework.http.HttpStatus;
 
 import br.com.adrianorodrigues.posterr.adapter.application.rest.PostsControllerAdapter;
 import br.com.adrianorodrigues.posterr.application.rest.dto.PostDto;
+import br.com.adrianorodrigues.posterr.helper.context.AbstractContextMockDataBase;
 import br.com.adrianorodrigues.posterr.helper.pool.application.rest.PostsDtoPool;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PostsControllerTest {
+class PostsControllerTest extends AbstractContextMockDataBase {
 
 	@LocalServerPort
 	int port;
