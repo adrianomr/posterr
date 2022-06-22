@@ -3,6 +3,7 @@ package br.com.adrianorodrigues.posterr.application.rest;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,7 @@ public class PostsController {
 	private final PostsControllerAdapter adapter;
 
 	@PostMapping
-	public PostDto createPost(PostDto post){
+	public PostDto createPost(@RequestBody PostDto post){
 		return adapter.createPost( post );
 	}
 
