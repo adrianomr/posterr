@@ -1,7 +1,8 @@
 spring:
+  application:
+    name: posterr
   datasource:
     url: jdbc:postgresql://localhost:5432/posterr
     username: postgres
     password: postgres
-  application:
-    name: posterr
+  jpa.hibernate.ddl-auto: validate

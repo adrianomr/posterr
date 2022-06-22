@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import br.com.adrianorodrigues.posterr.adapter.infra.repository.PostRepositoryAdapter;
 import br.com.adrianorodrigues.posterr.domain.Post;
-import br.com.adrianorodrigues.posterr.infra.repository.PostRepository;
 
 @Service
 @RequiredArgsConstructor
 public class CreatePostImpl implements CreatePost {
 
-	private final PostRepository repository;
+	private final PostRepositoryAdapter repository;
 
 	@Override
 	public Post execute(Post post) {
