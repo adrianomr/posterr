@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import br.com.adrianorodrigues.posterr.enums.PostType;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +18,6 @@ import lombok.Setter;
 public class PostDto {
 	private UUID id;
 	private String content;
+	private PostType type;
+	private UUID originalPostId;
 }

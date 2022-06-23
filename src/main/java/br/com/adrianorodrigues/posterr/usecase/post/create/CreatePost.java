@@ -1,4 +1,4 @@
-package br.com.adrianorodrigues.posterr.usecase;
+package br.com.adrianorodrigues.posterr.usecase.post.create;
 
 import br.com.adrianorodrigues.posterr.domain.Post;
 

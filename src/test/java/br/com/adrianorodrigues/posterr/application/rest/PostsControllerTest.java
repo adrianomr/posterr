@@ -47,6 +47,8 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 				.then()
 				.statusCode( HttpStatus.OK.value() )
 				.body( "id", equalTo( createdPost.getId().toString() ) )
-				.body( "content", equalTo( createdPost.getContent() ) );
+				.body( "content", equalTo( createdPost.getContent() ) )
+				.body( "type", equalTo( createdPost.getType().toString() ) )
+				.body( "originalPostId", equalTo( createdPost.getOriginalPostId().toString() ) );
 	}
 }

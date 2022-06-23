@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import br.com.adrianorodrigues.posterr.application.rest.dto.PostDto;
 import br.com.adrianorodrigues.posterr.mapper.application.rest.PostDtoMapper;
 import br.com.adrianorodrigues.posterr.mapper.domain.PostMapper;
-import br.com.adrianorodrigues.posterr.usecase.CreatePost;
+import br.com.adrianorodrigues.posterr.usecase.post.create.CreatePost;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +17,7 @@ public class PostsControllerAdapter {
 
 	public PostDto createPost(PostDto postDto){
 		var newPost = PostMapper.INSTANCE.map( postDto );
+		newPost.addOriginalPost(postDto.getOriginalPostId());
 
 		var post = createPost.execute( newPost );
 
