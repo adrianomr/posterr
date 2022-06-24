@@ -1,5 +1,7 @@
 package br.com.adrianorodrigues.posterr.adapter.application.rest;
 
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -15,9 +17,10 @@ public class PostsControllerAdapter {
 
 	private final CreatePost createPost;
 
-	public PostDto createPost(PostDto postDto){
+	public PostDto createPost(PostDto postDto, String userId) {
 		var newPost = PostMapper.INSTANCE.map( postDto );
-		newPost.addOriginalPost(postDto.getOriginalPostId());
+		newPost.addOriginalPost( postDto.getOriginalPostId() );
+		newPost.setUserId( UUID.fromString( userId ) );
 
 		var post = createPost.execute( newPost );
 

@@ -1,7 +1,6 @@
 package br.com.adrianorodrigues.posterr.adapter.infra.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -9,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.adrianorodrigues.posterr.domain.Post;
-import br.com.adrianorodrigues.posterr.helper.context.AbstractContextMockDataBase;
-import br.com.adrianorodrigues.posterr.helper.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.context.AbstractContextMockDataBase;
+import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
 import br.com.adrianorodrigues.posterr.infra.repository.PostRepository;
 
 @SpringBootTest

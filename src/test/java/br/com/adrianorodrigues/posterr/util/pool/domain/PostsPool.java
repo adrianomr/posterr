@@ -1,4 +1,4 @@
-package br.com.adrianorodrigues.posterr.helper.pool.domain;
+package br.com.adrianorodrigues.posterr.util.pool.domain;
 
 import java.util.UUID;
 

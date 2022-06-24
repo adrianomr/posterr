@@ -50,6 +50,8 @@ public class Post {
 	@ManyToOne
 	@JoinColumn(name = "original_post_id")
 	private Post originalPost;
+	@Column
+	private UUID userId;
 
 	private static Map<PostType, List<PostType>> buildInvalidPostTypes() {
 		var invalids = new EnumMap<PostType, List<PostType>>( PostType.class );

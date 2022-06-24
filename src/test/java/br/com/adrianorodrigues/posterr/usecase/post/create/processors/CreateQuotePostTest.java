@@ -13,11 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.adrianorodrigues.posterr.adapter.infra.repository.PostRepositoryAdapter;
-import br.com.adrianorodrigues.posterr.domain.Post;
 import br.com.adrianorodrigues.posterr.enums.PostType;
 import br.com.adrianorodrigues.posterr.exceptions.DataValidationException;
-import br.com.adrianorodrigues.posterr.exceptions.ResourceNotFoundException;
-import br.com.adrianorodrigues.posterr.helper.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
 
 @ExtendWith(MockitoExtension.class)
 class CreateQuotePostTest {

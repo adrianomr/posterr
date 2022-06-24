@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import br.com.adrianorodrigues.posterr.exceptions.DataValidationException;
 import br.com.adrianorodrigues.posterr.exceptions.ResourceNotFoundException;
+import br.com.adrianorodrigues.posterr.exceptions.UnathorizedException;
 
 @ControllerAdvice
 public class ControllerAdviceInterceptor
@@ -26,6 +27,14 @@ public class ControllerAdviceInterceptor
     protected ResponseEntity<ErrorDto> handleExceptions(
             DataValidationException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorDto errorDto = new ErrorDto( ex, status );
+        return new ResponseEntity<>(errorDto, status );
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<ErrorDto> handleExceptions(
+            UnathorizedException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         ErrorDto errorDto = new ErrorDto( ex, status );
         return new ResponseEntity<>(errorDto, status );
     }

@@ -1,4 +1,4 @@
-package br.com.adrianorodrigues.posterr.helper.context;
+package br.com.adrianorodrigues.posterr.util.context;
 
 import java.util.Objects;
 

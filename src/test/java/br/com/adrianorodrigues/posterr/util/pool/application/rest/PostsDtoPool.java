@@ -1,4 +1,4 @@
-package br.com.adrianorodrigues.posterr.helper.pool.application.rest;
+package br.com.adrianorodrigues.posterr.util.pool.application.rest;
 
 import java.util.UUID;
 

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import br.com.adrianorodrigues.posterr.enums.PostType;
 import br.com.adrianorodrigues.posterr.exceptions.DataValidationException;
-import br.com.adrianorodrigues.posterr.helper.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
 
 class CreateRegularPostTest {
 

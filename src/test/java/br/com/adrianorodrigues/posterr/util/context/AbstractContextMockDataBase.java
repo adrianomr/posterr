@@ -1,4 +1,4 @@
-package br.com.adrianorodrigues.posterr.helper.context;
+package br.com.adrianorodrigues.posterr.util.context;
 
 public class AbstractContextMockDataBase {
     static final PostgresContainer POSTGRESQL_CONTAINER = PostgresContainer.getInstance();

@@ -14,8 +14,9 @@ import org.springframework.http.HttpStatus;
 
 import br.com.adrianorodrigues.posterr.adapter.application.rest.PostsControllerAdapter;
 import br.com.adrianorodrigues.posterr.application.rest.dto.PostDto;
-import br.com.adrianorodrigues.posterr.helper.context.AbstractContextMockDataBase;
-import br.com.adrianorodrigues.posterr.helper.pool.application.rest.PostsDtoPool;
+import br.com.adrianorodrigues.posterr.util.context.AbstractContextMockDataBase;
+import br.com.adrianorodrigues.posterr.util.pool.application.rest.PostsDtoPool;
+import br.com.adrianorodrigues.posterr.util.pool.domain.UserPool;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -36,11 +37,12 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 	@Test
 	void createPostWhenSuccessShouldReturnPost() {
 		PostDto createdPost = PostsDtoPool.CREATED_POST;
-		when( adapter.createPost( any() ) )
+		when( adapter.createPost( any(), any() ) )
 				.thenReturn( createdPost );
 
 		RestAssured.given()
 				.body( "{}" )
+				.header( "x-user-id", "userId" )
 				.accept( ContentType.JSON )
 				.contentType( ContentType.JSON )
 				.post( "/posts" )

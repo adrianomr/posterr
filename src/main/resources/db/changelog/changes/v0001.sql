@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS post (
 	content varchar(777) NULL,
 	type varchar(50) NULL,
 	original_post_id uuid,
+	user_id uuid,
 	CONSTRAINT post_pkey PRIMARY KEY (id)
 );
 

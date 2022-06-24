@@ -12,8 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.adrianorodrigues.posterr.adapter.infra.repository.PostRepositoryAdapter;
-import br.com.adrianorodrigues.posterr.helper.pool.domain.PostsPool;
-import br.com.adrianorodrigues.posterr.usecase.post.create.CreatePostImpl;
+import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
 import br.com.adrianorodrigues.posterr.usecase.post.create.processors.CreatePostProcessor;
 import br.com.adrianorodrigues.posterr.usecase.post.create.processors.CreatePostProcessorFactory;
 
