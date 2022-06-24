@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.adrianorodrigues.posterr.domain.User;
 import br.com.adrianorodrigues.posterr.util.context.AbstractContextMockDataBase;
-import br.com.adrianorodrigues.posterr.util.pool.domain.UsersPool;
+import br.com.adrianorodrigues.posterr.util.builder.domain.UserBuilder;
 
 @SpringBootTest
 class UserRepositoryAdapterImplTest extends AbstractContextMockDataBase {
@@ -18,28 +18,31 @@ class UserRepositoryAdapterImplTest extends AbstractContextMockDataBase {
 
 	@Test
 	void findUserById() {
+		User user1 = UserBuilder.buildUser1();
+
 		User user = userRepositoryAdapter
-				.findUserById( UsersPool.USER_1.getId() )
+				.findUserById( user1.getId() )
 				.orElse( new User() );
 
 		assertThat(user)
-				.hasFieldOrPropertyWithValue( "username", UsersPool.USER_1.getUsername() )
-				.hasFieldOrPropertyWithValue( "postsAmount", UsersPool.USER_1.getPostsAmount() )
-				.hasFieldOrPropertyWithValue( "dailyPostsAmount", UsersPool.USER_1.getDailyPostsAmount() )
-				.hasFieldOrPropertyWithValue( "lastPostDate", UsersPool.USER_1.getLastPostDate() );
+				.hasFieldOrPropertyWithValue( "username", user1.getUsername() )
+				.hasFieldOrPropertyWithValue( "postsAmount", user1.getPostsAmount() )
+				.hasFieldOrPropertyWithValue( "dailyPostsAmount", user1.getDailyPostsAmount() )
+				.hasFieldOrPropertyWithValue( "lastPostDate", user1.getLastPostDate() );
 	}
 
 	@Test
 	void saveShouldSavePost() {
-		userRepositoryAdapter.save( UsersPool.USER_WITH_POST_IN_SAME_DAY );
+		User userWithPostInSameDay = UserBuilder.buildUserWithPostInSameDay();
+		userRepositoryAdapter.save( userWithPostInSameDay );
 
 		User user = userRepositoryAdapter
-				.findUserById( UsersPool.USER_WITH_POST_IN_SAME_DAY.getId() )
+				.findUserById( userWithPostInSameDay.getId() )
 				.orElse( new User() );
 		assertThat(user)
-				.hasFieldOrPropertyWithValue( "username", UsersPool.USER_WITH_POST_IN_SAME_DAY.getUsername() )
-				.hasFieldOrPropertyWithValue( "postsAmount", UsersPool.USER_WITH_POST_IN_SAME_DAY.getPostsAmount() )
-				.hasFieldOrPropertyWithValue( "dailyPostsAmount", UsersPool.USER_WITH_POST_IN_SAME_DAY.getDailyPostsAmount() )
-				.hasFieldOrPropertyWithValue( "lastPostDate", UsersPool.USER_WITH_POST_IN_SAME_DAY.getLastPostDate() );
+				.hasFieldOrPropertyWithValue( "username", userWithPostInSameDay.getUsername() )
+				.hasFieldOrPropertyWithValue( "postsAmount", userWithPostInSameDay.getPostsAmount() )
+				.hasFieldOrPropertyWithValue( "dailyPostsAmount", userWithPostInSameDay.getDailyPostsAmount() )
+				.hasFieldOrPropertyWithValue( "lastPostDate", userWithPostInSameDay.getLastPostDate() );
 	}
 }

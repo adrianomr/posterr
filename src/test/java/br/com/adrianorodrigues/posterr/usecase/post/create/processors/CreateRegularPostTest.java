@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import br.com.adrianorodrigues.posterr.enums.PostType;
 import br.com.adrianorodrigues.posterr.exceptions.DataValidationException;
-import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.builder.domain.PostBuilder;
 
 class CreateRegularPostTest {
 
@@ -14,15 +14,17 @@ class CreateRegularPostTest {
 
 	@Test
 	void executeWhenSuccessShouldReturnPost() {
-		var post = createRegularPost.execute( PostsPool.NEW_POST );
+		var newPost = PostBuilder.buildNewPost();
+		var post = createRegularPost.execute( newPost );
 
-		assertEquals( PostsPool.NEW_POST, post );
+		assertEquals( newPost, post );
 	}
 
 	@Test
 	void executeWhenHasOriginalPostShouldThrowException() {
+		var post = PostBuilder.buildNewPostWithOriginalPost();
 		assertThrows( DataValidationException.class,
-				() -> createRegularPost.execute( PostsPool.NEW_POST_WITH_ORIGINAL_POST ) );
+				() -> createRegularPost.execute( post ) );
 	}
 
 	@Test

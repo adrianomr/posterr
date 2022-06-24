@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.adrianorodrigues.posterr.domain.Post;
 import br.com.adrianorodrigues.posterr.util.context.AbstractContextMockDataBase;
-import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.builder.domain.PostBuilder;
 import br.com.adrianorodrigues.posterr.infra.repository.PostRepository;
 
 @SpringBootTest
@@ -27,7 +27,7 @@ class PostRepositoryAdapterImplTest extends AbstractContextMockDataBase {
 
 	@Test
 	void saveShouldSavePost() {
-		var post = postRepositoryAdapter.save( PostsPool.NEW_POST );
+		var post = postRepositoryAdapter.save( PostBuilder.buildNewPost() );
 
 		var postFromDb = repository.findById( post.getId() )
 				.orElse( new Post() );

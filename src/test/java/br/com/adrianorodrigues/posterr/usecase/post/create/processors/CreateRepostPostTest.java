@@ -13,13 +13,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.adrianorodrigues.posterr.adapter.infra.repository.PostRepositoryAdapter;
+import br.com.adrianorodrigues.posterr.domain.Post;
 import br.com.adrianorodrigues.posterr.enums.PostType;
 import br.com.adrianorodrigues.posterr.exceptions.DataValidationException;
-import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.builder.domain.PostBuilder;
 
 @ExtendWith(MockitoExtension.class)
 class CreateRepostPostTest {
 
+	public static final Post CREATED_POST = PostBuilder.buildCreatedPost();
 	@Mock
 	PostRepositoryAdapter postRepositoryAdapter;
 	@InjectMocks
@@ -27,21 +29,21 @@ class CreateRepostPostTest {
 
 	@Test
 	void executeWhenSuccessShouldCreatePost() {
-		var newQuotePost = PostsPool.NEW_REPOST_POST;
-		when( postRepositoryAdapter.findById( PostsPool.CREATED_POST ) )
-				.thenReturn( Optional.of( PostsPool.CREATED_POST ) );
+		var newQuotePost = PostBuilder.buildNewRepostPost();
+		when( postRepositoryAdapter.findById( newQuotePost.getOriginalPost() ) )
+				.thenReturn( Optional.of( CREATED_POST ) );
 
 		var post = createRepostPost.execute( newQuotePost );
 
 		assertThat( post )
 				.hasFieldOrPropertyWithValue( "content", newQuotePost.getContent() )
 				.hasFieldOrPropertyWithValue( "type", newQuotePost.getType() )
-				.hasFieldOrPropertyWithValue( "originalPost", PostsPool.CREATED_POST );
+				.hasFieldOrPropertyWithValue( "originalPost", CREATED_POST );
 	}
 
 	@Test
 	void executeWhenOriginalPostNotSentShouldThrowException() {
-		var newQuotePost = PostsPool.NEW_REPOST_POST_WITHOUT_ORIGINAL;
+		var newQuotePost = PostBuilder.buildNewRepostPostWithoutOriginal();
 		when( postRepositoryAdapter.findById( null ) )
 				.thenReturn( Optional.empty() );
 
@@ -50,9 +52,9 @@ class CreateRepostPostTest {
 
 	@Test
 	void executeWhenOriginalPostIsQuotePostShouldThrowException() {
-		var newQuotePost = PostsPool.NEW_REPOST_POST_QUOTING_REPOST_POST;
-		when( postRepositoryAdapter.findById( PostsPool.CREATED_REPOST_POST ) )
-				.thenReturn( Optional.of( PostsPool.CREATED_REPOST_POST ) );
+		var newQuotePost = PostBuilder.buildNewRepostPostReferencingRepostPost();
+		when( postRepositoryAdapter.findById( newQuotePost.getOriginalPost() ) )
+				.thenReturn( Optional.of( PostBuilder.buildCreatedRepostPost() ) );
 
 		assertThrows( DataValidationException.class, () -> createRepostPost.execute( newQuotePost ) );
 	}

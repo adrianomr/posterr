@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import br.com.adrianorodrigues.posterr.adapter.infra.repository.PostRepositoryAdapter;
-import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.builder.domain.PostBuilder;
 
 @SpringBootTest(classes = { CreatePostProcessorFactoryImpl.class, CreateRegularPost.class, CreateQuotePost.class,
 		CreateRepostPost.class })
@@ -27,21 +27,21 @@ class CreatePostProcessorFactoryImplTest {
 
 	@Test
 	void getProcessorWhenPostIsRegularShouldReturnRegularPostProcessor() {
-		var processor = factory.getProcessor( PostsPool.NEW_POST );
+		var processor = factory.getProcessor( PostBuilder.buildNewPost() );
 
 		assertEquals( createRegularPost, processor );
 	}
 
 	@Test
 	void getProcessorWhenPostIsQuoteShouldReturnQuotePostProcessor() {
-		var processor = factory.getProcessor( PostsPool.NEW_QUOTE_POST );
+		var processor = factory.getProcessor( PostBuilder.buildNewQuotePost() );
 
 		assertEquals( createQuotePost, processor );
 	}
 
 	@Test
 	void getProcessorWhenPostIsRepostShouldReturnQuotePostProcessor() {
-		var processor = factory.getProcessor( PostsPool.NEW_REPOST_POST );
+		var processor = factory.getProcessor( PostBuilder.buildNewRepostPost() );
 
 		assertEquals( createRepostPost, processor );
 	}

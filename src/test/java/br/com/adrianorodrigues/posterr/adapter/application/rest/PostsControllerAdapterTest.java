@@ -13,11 +13,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import br.com.adrianorodrigues.posterr.application.rest.dto.PostDto;
 import br.com.adrianorodrigues.posterr.domain.Post;
-import br.com.adrianorodrigues.posterr.util.pool.application.rest.PostsDtoPool;
-import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.builder.application.rest.PostsDtoBuilder;
+import br.com.adrianorodrigues.posterr.util.builder.domain.PostBuilder;
 import br.com.adrianorodrigues.posterr.usecase.post.create.CreatePost;
-import br.com.adrianorodrigues.posterr.util.pool.domain.UsersPool;
+import br.com.adrianorodrigues.posterr.util.builder.domain.UserBuilder;
 
 @ExtendWith(MockitoExtension.class)
 class PostsControllerAdapterTest {
@@ -31,46 +32,47 @@ class PostsControllerAdapterTest {
 
 	@Test
 	void createPostShouldCallUseCase() {
-		Post createdPost = PostsPool.CREATED_POST;
+		Post createdPost = PostBuilder.buildCreatedPost();
 		when(createPost.execute( any() ))
 				.thenReturn( createdPost );
 
-		adapter.createPost( PostsDtoPool.NEW_POST, UsersPool.USER_1.getId().toString() );
+		adapter.createPost( PostsDtoBuilder.buildNewQuotePostWithoutOriginalPost(), UserBuilder.buildUser1().getId().toString() );
 
 		verify( createPost )
 				.execute( postCaptor.capture() );
 		assertThat( postCaptor.getValue() )
 				.hasFieldOrPropertyWithValue( "id", null )
-				.hasFieldOrPropertyWithValue( "content", PostsDtoPool.NEW_POST.getContent() )
-				.hasFieldOrPropertyWithValue( "type", PostsDtoPool.NEW_POST.getType() )
+				.hasFieldOrPropertyWithValue( "content", PostsDtoBuilder.buildNewQuotePostWithoutOriginalPost().getContent() )
+				.hasFieldOrPropertyWithValue( "type", PostsDtoBuilder.buildNewQuotePostWithoutOriginalPost().getType() )
 				.hasFieldOrPropertyWithValue( "originalPost", null );
 	}
 
 	@Test
 	void createPostWhenPostHasOriginalPostShouldCallWithOriginalPost() {
-		Post createdPost = PostsPool.CREATED_POST;
+		Post createdPost = PostBuilder.buildCreatedPost();
+		var postDto = PostsDtoBuilder.buildNewPostWithOriginalPost();
 		when(createPost.execute( any() ))
 				.thenReturn( createdPost );
 
-		adapter.createPost( PostsDtoPool.NEW_POST_WITH_ORIGINAL_POST, UsersPool.USER_1.getId().toString() );
+		adapter.createPost( postDto, UserBuilder.buildUser1().getId().toString() );
 
 		verify( createPost )
 				.execute( postCaptor.capture() );
 		assertThat( postCaptor.getValue() )
 				.hasFieldOrPropertyWithValue( "id", null )
-				.hasFieldOrPropertyWithValue( "content", PostsDtoPool.NEW_POST_WITH_ORIGINAL_POST.getContent() )
-				.hasFieldOrPropertyWithValue( "type", PostsDtoPool.NEW_POST_WITH_ORIGINAL_POST.getType() )
-				.hasFieldOrPropertyWithValue( "originalPost.id", PostsDtoPool.NEW_POST_WITH_ORIGINAL_POST.getOriginalPostId() )
-				.hasFieldOrPropertyWithValue( "userId", UsersPool.USER_1.getId() );
+				.hasFieldOrPropertyWithValue( "content", postDto.getContent() )
+				.hasFieldOrPropertyWithValue( "type", postDto.getType() )
+				.hasFieldOrPropertyWithValue( "originalPost.id", postDto.getOriginalPostId() )
+				.hasFieldOrPropertyWithValue( "userId", UserBuilder.buildUser1().getId() );
 	}
 
 	@Test
 	void createPostShouldReturnPostData() {
-		Post createdPost = PostsPool.NEW_POST_WITH_ORIGINAL_POST;
+		Post createdPost = PostBuilder.buildNewPostWithOriginalPost();
 		when(createPost.execute( any() ))
 				.thenReturn( createdPost );
 
-		var post = adapter.createPost( PostsDtoPool.NEW_POST, UsersPool.USER_1.getId().toString() );
+		var post = adapter.createPost( PostsDtoBuilder.buildNewQuotePostWithoutOriginalPost(), UserBuilder.buildUser1().getId().toString() );
 
 		assertThat( post )
 				.hasFieldOrPropertyWithValue( "content", createdPost.getContent() )

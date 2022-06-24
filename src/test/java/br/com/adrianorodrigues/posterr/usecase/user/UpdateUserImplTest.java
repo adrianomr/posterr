@@ -16,8 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.adrianorodrigues.posterr.adapter.infra.repository.UserRepositoryAdapter;
 import br.com.adrianorodrigues.posterr.exceptions.ForbiddenException;
-import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
-import br.com.adrianorodrigues.posterr.util.pool.domain.UsersPool;
+import br.com.adrianorodrigues.posterr.util.builder.domain.PostBuilder;
+import br.com.adrianorodrigues.posterr.util.builder.domain.UserBuilder;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateUserImplTest {
@@ -29,8 +29,8 @@ class UpdateUserImplTest {
 
 	@Test
 	void executeWhenSuccessShouldUpdatePostsCount() {
-		var post = PostsPool.NEW_POST;
-		var user = UsersPool.USER_1;
+		var post = PostBuilder.buildNewPost();
+		var user = UserBuilder.buildUser1();
 		when( userRepositoryAdapter.findUserById( user.getId() ) )
 				.thenReturn( Optional.of( user ) );
 
@@ -43,8 +43,8 @@ class UpdateUserImplTest {
 
 	@Test
 	void executeWhenSuccessShouldUpdateLastPostDate() {
-		var post = PostsPool.NEW_POST;
-		var user = UsersPool.USER_1;
+		var post = PostBuilder.buildNewPost();
+		var user = UserBuilder.buildUser1();
 		when( userRepositoryAdapter.findUserById( user.getId() ) )
 				.thenReturn( Optional.of( user ) );
 
@@ -56,8 +56,8 @@ class UpdateUserImplTest {
 
 	@Test
 	void executeWhenSuccessShouldSaveUser() {
-		var post = PostsPool.NEW_POST;
-		var user = UsersPool.USER_1;
+		var post = PostBuilder.buildNewPost();
+		var user = UserBuilder.buildUser1();
 		when( userRepositoryAdapter.findUserById( user.getId() ) )
 				.thenReturn( Optional.of( user ) );
 
@@ -68,8 +68,8 @@ class UpdateUserImplTest {
 
 	@Test
 	void executeWhenUserHasPostInSameDayShouldUpdatePostsCount() {
-		var post = PostsPool.NEW_POST;
-		var user = UsersPool.USER_WITH_POST_IN_SAME_DAY;
+		var post = PostBuilder.buildNewPost();
+		var user = UserBuilder.buildUserWithPostInSameDay();
 		when( userRepositoryAdapter.findUserById( user.getId() ) )
 				.thenReturn( Optional.of( user ) );
 
@@ -82,8 +82,8 @@ class UpdateUserImplTest {
 
 	@Test
 	void executeWhenUserHasPostInOtherDayShouldResetDailyPostsCount() {
-		var post = PostsPool.NEW_POST;
-		var user = UsersPool.USER_WITH_POST_IN_OTHER_DAY;
+		var post = PostBuilder.buildNewPost();
+		var user = UserBuilder.buildUserWithPostInOtherDay();
 		when( userRepositoryAdapter.findUserById( user.getId() ) )
 				.thenReturn( Optional.of( user ) );
 
@@ -95,8 +95,8 @@ class UpdateUserImplTest {
 
 	@Test
 	void executeWhenUserHasPostInOtherDayShouldUpdatePostsCount() {
-		var post = PostsPool.NEW_POST;
-		var user = UsersPool.USER_WITH_POST_IN_OTHER_DAY;
+		var post = PostBuilder.buildNewPost();
+		var user = UserBuilder.buildUserWithPostInOtherDay();
 		when( userRepositoryAdapter.findUserById( user.getId() ) )
 				.thenReturn( Optional.of( user ) );
 
@@ -108,8 +108,8 @@ class UpdateUserImplTest {
 
 	@Test
 	void executeWhenUserHasMoreFivePostTodayShouldThrowLimitExceededException() {
-		var post = PostsPool.NEW_POST;
-		var user = UsersPool.USER_WITH_QUOTA_REACHED;
+		var post = PostBuilder.buildNewPost();
+		var user = UserBuilder.buildUserWithQuotaReached();
 		when( userRepositoryAdapter.findUserById( user.getId() ) )
 				.thenReturn( Optional.of( user ) );
 

@@ -12,14 +12,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.adrianorodrigues.posterr.adapter.infra.repository.PostRepositoryAdapter;
+import br.com.adrianorodrigues.posterr.domain.Post;
 import br.com.adrianorodrigues.posterr.usecase.user.UpdateUser;
-import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.builder.domain.PostBuilder;
 import br.com.adrianorodrigues.posterr.usecase.post.create.processors.CreatePostProcessor;
 import br.com.adrianorodrigues.posterr.usecase.post.create.processors.CreatePostProcessorFactory;
 
 @ExtendWith(MockitoExtension.class)
 class CreatePostImplTest {
 
+	public static final Post POST = PostBuilder.buildNewPost();
+	public static final Post CREATED_POST = PostBuilder.buildCreatedPost();
 	@Mock
 	private CreatePostProcessorFactory processorFactory;
 	@Mock
@@ -33,42 +36,49 @@ class CreatePostImplTest {
 
 	@BeforeEach
 	void setUp() {
-		when( processorFactory.getProcessor( PostsPool.NEW_POST ) )
+		var post = POST;
+		when( processorFactory.getProcessor( post ) )
 				.thenReturn( processor );
-		when( processor.execute( PostsPool.NEW_POST ) )
-				.thenReturn( PostsPool.NEW_POST );
-		when( postRepositoryAdapter.save( PostsPool.NEW_POST ) )
-				.thenReturn( PostsPool.CREATED_POST );
+		when( processor.execute( post ) )
+				.thenReturn( post );
+		when( postRepositoryAdapter.save( post ) )
+				.thenReturn( CREATED_POST );
 	}
 
 	@Test
 	void executeWhenProcessorExecutedShouldReturnPost() {
-		var post = createPost.execute( PostsPool.NEW_POST );
+		var post = createPost.execute( POST );
 
 		assertThat( post )
-				.hasFieldOrPropertyWithValue( "id", PostsPool.CREATED_POST.getId() )
-				.hasFieldOrPropertyWithValue( "content", PostsPool.CREATED_POST.getContent() );
+				.hasFieldOrPropertyWithValue( "id", CREATED_POST.getId() )
+				.hasFieldOrPropertyWithValue( "content", CREATED_POST.getContent() );
 	}
 
 	@Test
 	void executeWhenProcessorFoundShouldCallProcessor() {
-		var post = createPost.execute( PostsPool.NEW_POST );
+		var newPost = POST;
 
-		verify( processor ).execute( PostsPool.NEW_POST );
+		createPost.execute( newPost );
+
+		verify( processor ).execute( newPost );
 	}
 
 	@Test
 	void executeWhenProcessorExecutedShouldSavePost() {
-		var post = createPost.execute( PostsPool.NEW_POST );
+		var newPost = POST;
 
-		verify( postRepositoryAdapter ).save( PostsPool.NEW_POST );
+		createPost.execute( newPost );
+
+		verify( postRepositoryAdapter ).save( newPost );
 	}
 
 	@Test
 	void executeWhenProcessorExecutedShouldUpdateUser() {
-		var post = createPost.execute( PostsPool.NEW_POST );
+		var newPost = POST;
 
-		verify( updateUser ).execute( PostsPool.NEW_POST );
+		createPost.execute( newPost );
+
+		verify( updateUser ).execute( newPost );
 	}
 
 }

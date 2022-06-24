@@ -13,12 +13,13 @@ import org.springframework.http.HttpStatus;
 
 import br.com.adrianorodrigues.posterr.application.rest.dto.PostDto;
 import br.com.adrianorodrigues.posterr.domain.Post;
+import br.com.adrianorodrigues.posterr.infra.repository.UserRepository;
 import br.com.adrianorodrigues.posterr.util.context.AbstractContextMockDataBase;
-import br.com.adrianorodrigues.posterr.util.pool.application.rest.PostsDtoPool;
-import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
+import br.com.adrianorodrigues.posterr.util.builder.application.rest.PostsDtoBuilder;
+import br.com.adrianorodrigues.posterr.util.builder.domain.PostBuilder;
 import br.com.adrianorodrigues.posterr.infra.repository.PostRepository;
 import br.com.adrianorodrigues.posterr.mapper.application.rest.PostDtoMapper;
-import br.com.adrianorodrigues.posterr.util.pool.domain.UsersPool;
+import br.com.adrianorodrigues.posterr.util.builder.domain.UserBuilder;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -31,13 +32,16 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 	private int port;
 	@Autowired
 	private PostRepository postRepository;
+	@Autowired
+	private UserRepository userRepository;
 	private Post savedPost;
 
 	@BeforeEach
 	void setUp() {
 		RestAssured.port = port;
-		Post post = PostsPool.NEW_POST;
+		var post = PostBuilder.buildNewPost();
 		savedPost = postRepository.save( post );
+		userRepository.save( UserBuilder.buildUser1() );
 	}
 
 	@AfterEach
@@ -47,7 +51,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 
 	@Test
 	void createPostWhenSuccessShouldReturnPost() {
-		var post = PostsDtoPool.NEW_POST;
+		var post = PostsDtoBuilder.buildNewPost();
 
 		executePostRequest( post )
 				.then()
@@ -59,7 +63,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 
 	@Test
 	void createPostWhenExecutedMoreThanFiveTimesInSameDayShouldReturnForbidden() {
-		var post = PostsDtoPool.NEW_POST;
+		var post = PostsDtoBuilder.buildNewPost();
 
 		for (int i = 0; i < 5; i++) {
 			executePostRequest( post )
@@ -77,7 +81,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 
 	@Test
 	void createPostWhenQuoteWithOriginalPostShouldReturnSuccess() {
-		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_QUOTE_POST_WITHOUT_ORIGINAL_POST );
+		var post = PostDtoMapper.INSTANCE.map( PostsDtoBuilder.buildNewQuotePostWithoutOriginalPost() );
 		post.setOriginalPostId( savedPost.getId() );
 
 		executePostRequest( post )
@@ -91,7 +95,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 
 	@Test
 	void createPostWhenRepostWithOriginalPostShouldReturnSuccess() {
-		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_REPOST_POST_WITHOUT_ORIGINAL_POST );
+		var post = PostDtoMapper.INSTANCE.map( PostsDtoBuilder.buildNewRepostPostWithoutOriginalPost() );
 		post.setOriginalPostId( savedPost.getId() );
 
 		executePostRequest( post )
@@ -105,7 +109,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 
 	@Test
 	void createPostWhenRegularWithOriginalPostShouldReturnBadRequest() {
-		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_POST );
+		var post = PostDtoMapper.INSTANCE.map( PostsDtoBuilder.buildNewPost() );
 		post.setOriginalPostId( savedPost.getId() );
 
 		executePostRequest( post )
@@ -115,7 +119,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 
 	@Test
 	void createPostWhenQuoteWithoutOriginalPostShouldReturnBadRequest() {
-		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_QUOTE_POST_WITHOUT_ORIGINAL_POST );
+		var post = PostDtoMapper.INSTANCE.map( PostsDtoBuilder.buildNewQuotePostWithoutOriginalPost() );
 
 		executePostRequest( post )
 				.then()
@@ -124,7 +128,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 
 	@Test
 	void createPostWhenRepostWithoutOriginalPostShouldReturnBadRequest() {
-		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_REPOST_POST_WITHOUT_ORIGINAL_POST );
+		var post = PostDtoMapper.INSTANCE.map( PostsDtoBuilder.buildNewRepostPostWithoutOriginalPost() );
 
 		executePostRequest( post )
 				.then()
@@ -133,7 +137,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 
 	@Test
 	void createPostWhenNoUserIdHeaderShouldReturnUnauthorized() {
-		var post = PostsDtoPool.NEW_POST;
+		var post = PostsDtoBuilder.buildNewPost();
 
 		RestAssured.given()
 				.accept( ContentType.JSON )
@@ -146,7 +150,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 
 	private Response executePostRequest(PostDto post) {
 		return RestAssured.given()
-				.header( "x-user-id", UsersPool.USER_1.getId().toString() )
+				.header( "x-user-id", UserBuilder.buildUser1().getId().toString() )
 				.accept( ContentType.JSON )
 				.contentType( ContentType.JSON )
 				.body( post )
