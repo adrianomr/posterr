@@ -10,6 +10,7 @@ public class PostsPool {
 	public static final Post NEW_POST = Post.builder()
 			.content( "CREATED POST" )
 			.type( PostType.REGULAR )
+			.userId( UsersPool.USER_1.getId() )
 			.build();
 
 	public static final Post NEW_QUOTE_POST_WITHOUT_ORIGINAL = Post.builder()

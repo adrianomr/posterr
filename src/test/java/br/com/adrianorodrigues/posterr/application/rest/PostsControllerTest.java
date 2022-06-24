@@ -16,7 +16,6 @@ import br.com.adrianorodrigues.posterr.adapter.application.rest.PostsControllerA
 import br.com.adrianorodrigues.posterr.application.rest.dto.PostDto;
 import br.com.adrianorodrigues.posterr.util.context.AbstractContextMockDataBase;
 import br.com.adrianorodrigues.posterr.util.pool.application.rest.PostsDtoPool;
-import br.com.adrianorodrigues.posterr.util.pool.domain.UserPool;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;

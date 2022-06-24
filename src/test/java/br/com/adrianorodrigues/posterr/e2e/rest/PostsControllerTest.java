@@ -11,16 +11,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
+import br.com.adrianorodrigues.posterr.application.rest.dto.PostDto;
 import br.com.adrianorodrigues.posterr.domain.Post;
 import br.com.adrianorodrigues.posterr.util.context.AbstractContextMockDataBase;
 import br.com.adrianorodrigues.posterr.util.pool.application.rest.PostsDtoPool;
 import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
 import br.com.adrianorodrigues.posterr.infra.repository.PostRepository;
 import br.com.adrianorodrigues.posterr.mapper.application.rest.PostDtoMapper;
-import br.com.adrianorodrigues.posterr.util.pool.domain.UserPool;
+import br.com.adrianorodrigues.posterr.util.pool.domain.UsersPool;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PostsControllerTest extends AbstractContextMockDataBase {
@@ -47,12 +49,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 	void createPostWhenSuccessShouldReturnPost() {
 		var post = PostsDtoPool.NEW_POST;
 
-		RestAssured.given()
-				.header( "x-user-id", UserPool.USER_1.getId().toString() )
-				.accept( ContentType.JSON )
-				.contentType( ContentType.JSON )
-				.body( post )
-				.post( "/posts" )
+		executePostRequest( post )
 				.then()
 				.statusCode( HttpStatus.OK.value() )
 				.body( "id", notNullValue() )
@@ -61,16 +58,29 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 	}
 
 	@Test
+	void createPostWhenExecutedMoreThanFiveTimesInSameDayShouldReturnForbidden() {
+		var post = PostsDtoPool.NEW_POST;
+
+		for (int i = 0; i < 5; i++) {
+			executePostRequest( post )
+					.then()
+					.statusCode( HttpStatus.OK.value() )
+					.body( "id", notNullValue() )
+					.body( "content", equalTo( post.getContent() ) )
+					.body( "type", equalTo( post.getType().toString() ) );
+		}
+
+		executePostRequest( post )
+				.then()
+				.statusCode( HttpStatus.FORBIDDEN.value() );
+	}
+
+	@Test
 	void createPostWhenQuoteWithOriginalPostShouldReturnSuccess() {
 		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_QUOTE_POST_WITHOUT_ORIGINAL_POST );
 		post.setOriginalPostId( savedPost.getId() );
 
-		RestAssured.given()
-				.header( "x-user-id", UserPool.USER_1.getId().toString() )
-				.accept( ContentType.JSON )
-				.contentType( ContentType.JSON )
-				.body( post )
-				.post( "/posts" )
+		executePostRequest( post )
 				.then()
 				.statusCode( HttpStatus.OK.value() )
 				.body( "id", notNullValue() )
@@ -84,12 +94,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_REPOST_POST_WITHOUT_ORIGINAL_POST );
 		post.setOriginalPostId( savedPost.getId() );
 
-		RestAssured.given()
-				.header( "x-user-id", UserPool.USER_1.getId().toString() )
-				.accept( ContentType.JSON )
-				.contentType( ContentType.JSON )
-				.body( post )
-				.post( "/posts" )
+		executePostRequest( post )
 				.then()
 				.statusCode( HttpStatus.OK.value() )
 				.body( "id", notNullValue() )
@@ -103,12 +108,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_POST );
 		post.setOriginalPostId( savedPost.getId() );
 
-		RestAssured.given()
-				.header( "x-user-id", UserPool.USER_1.getId().toString() )
-				.accept( ContentType.JSON )
-				.contentType( ContentType.JSON )
-				.body( post )
-				.post( "/posts" )
+		executePostRequest( post )
 				.then()
 				.statusCode( HttpStatus.BAD_REQUEST.value() );
 	}
@@ -117,12 +117,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 	void createPostWhenQuoteWithoutOriginalPostShouldReturnBadRequest() {
 		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_QUOTE_POST_WITHOUT_ORIGINAL_POST );
 
-		RestAssured.given()
-				.header( "x-user-id", UserPool.USER_1.getId().toString() )
-				.accept( ContentType.JSON )
-				.contentType( ContentType.JSON )
-				.body( post )
-				.post( "/posts" )
+		executePostRequest( post )
 				.then()
 				.statusCode( HttpStatus.BAD_REQUEST.value() );
 	}
@@ -131,12 +126,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 	void createPostWhenRepostWithoutOriginalPostShouldReturnBadRequest() {
 		var post = PostDtoMapper.INSTANCE.map( PostsDtoPool.NEW_REPOST_POST_WITHOUT_ORIGINAL_POST );
 
-		RestAssured.given()
-				.header( "x-user-id", UserPool.USER_1.getId().toString() )
-				.accept( ContentType.JSON )
-				.contentType( ContentType.JSON )
-				.body( post )
-				.post( "/posts" )
+		executePostRequest( post )
 				.then()
 				.statusCode( HttpStatus.BAD_REQUEST.value() );
 	}
@@ -152,6 +142,15 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 				.post( "/posts" )
 				.then()
 				.statusCode( HttpStatus.UNAUTHORIZED.value() );
+	}
+
+	private Response executePostRequest(PostDto post) {
+		return RestAssured.given()
+				.header( "x-user-id", UsersPool.USER_1.getId().toString() )
+				.accept( ContentType.JSON )
+				.contentType( ContentType.JSON )
+				.body( post )
+				.post( "/posts" );
 	}
 
 

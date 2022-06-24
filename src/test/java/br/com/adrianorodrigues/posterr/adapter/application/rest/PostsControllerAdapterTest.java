@@ -17,7 +17,7 @@ import br.com.adrianorodrigues.posterr.domain.Post;
 import br.com.adrianorodrigues.posterr.util.pool.application.rest.PostsDtoPool;
 import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
 import br.com.adrianorodrigues.posterr.usecase.post.create.CreatePost;
-import br.com.adrianorodrigues.posterr.util.pool.domain.UserPool;
+import br.com.adrianorodrigues.posterr.util.pool.domain.UsersPool;
 
 @ExtendWith(MockitoExtension.class)
 class PostsControllerAdapterTest {
@@ -35,7 +35,7 @@ class PostsControllerAdapterTest {
 		when(createPost.execute( any() ))
 				.thenReturn( createdPost );
 
-		adapter.createPost( PostsDtoPool.NEW_POST, UserPool.USER_1.getId().toString() );
+		adapter.createPost( PostsDtoPool.NEW_POST, UsersPool.USER_1.getId().toString() );
 
 		verify( createPost )
 				.execute( postCaptor.capture() );
@@ -52,7 +52,7 @@ class PostsControllerAdapterTest {
 		when(createPost.execute( any() ))
 				.thenReturn( createdPost );
 
-		adapter.createPost( PostsDtoPool.NEW_POST_WITH_ORIGINAL_POST, UserPool.USER_1.getId().toString() );
+		adapter.createPost( PostsDtoPool.NEW_POST_WITH_ORIGINAL_POST, UsersPool.USER_1.getId().toString() );
 
 		verify( createPost )
 				.execute( postCaptor.capture() );
@@ -61,7 +61,7 @@ class PostsControllerAdapterTest {
 				.hasFieldOrPropertyWithValue( "content", PostsDtoPool.NEW_POST_WITH_ORIGINAL_POST.getContent() )
 				.hasFieldOrPropertyWithValue( "type", PostsDtoPool.NEW_POST_WITH_ORIGINAL_POST.getType() )
 				.hasFieldOrPropertyWithValue( "originalPost.id", PostsDtoPool.NEW_POST_WITH_ORIGINAL_POST.getOriginalPostId() )
-				.hasFieldOrPropertyWithValue( "userId", UserPool.USER_1.getId() );
+				.hasFieldOrPropertyWithValue( "userId", UsersPool.USER_1.getId() );
 	}
 
 	@Test
@@ -70,7 +70,7 @@ class PostsControllerAdapterTest {
 		when(createPost.execute( any() ))
 				.thenReturn( createdPost );
 
-		var post = adapter.createPost( PostsDtoPool.NEW_POST, UserPool.USER_1.getId().toString() );
+		var post = adapter.createPost( PostsDtoPool.NEW_POST, UsersPool.USER_1.getId().toString() );
 
 		assertThat( post )
 				.hasFieldOrPropertyWithValue( "content", createdPost.getContent() )

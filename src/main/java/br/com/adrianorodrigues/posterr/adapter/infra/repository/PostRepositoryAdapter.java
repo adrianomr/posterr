@@ -5,7 +5,7 @@ import java.util.Optional;
 import br.com.adrianorodrigues.posterr.domain.Post;
 
 public interface PostRepositoryAdapter {
-	Optional<Post> findById(Post id);
+	Optional<Post> findById(Post post);
 
 	Post save(Post post);
 }

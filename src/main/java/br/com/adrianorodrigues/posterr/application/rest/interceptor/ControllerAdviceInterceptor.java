@@ -8,6 +8,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.adrianorodrigues.posterr.exceptions.DataValidationException;
+import br.com.adrianorodrigues.posterr.exceptions.ForbiddenException;
 import br.com.adrianorodrigues.posterr.exceptions.ResourceNotFoundException;
 import br.com.adrianorodrigues.posterr.exceptions.UnathorizedException;
 
@@ -35,6 +36,14 @@ public class ControllerAdviceInterceptor
     protected ResponseEntity<ErrorDto> handleExceptions(
             UnathorizedException ex, WebRequest request) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
+        ErrorDto errorDto = new ErrorDto( ex, status );
+        return new ResponseEntity<>(errorDto, status );
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<ErrorDto> handleExceptions(
+            ForbiddenException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
         ErrorDto errorDto = new ErrorDto( ex, status );
         return new ResponseEntity<>(errorDto, status );
     }

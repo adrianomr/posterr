@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.adrianorodrigues.posterr.adapter.infra.repository.PostRepositoryAdapter;
+import br.com.adrianorodrigues.posterr.usecase.user.UpdateUser;
 import br.com.adrianorodrigues.posterr.util.pool.domain.PostsPool;
 import br.com.adrianorodrigues.posterr.usecase.post.create.processors.CreatePostProcessor;
 import br.com.adrianorodrigues.posterr.usecase.post.create.processors.CreatePostProcessorFactory;
@@ -25,6 +26,8 @@ class CreatePostImplTest {
 	private CreatePostProcessor processor;
 	@Mock
 	private PostRepositoryAdapter postRepositoryAdapter;
+	@Mock
+	private UpdateUser updateUser;
 	@InjectMocks
 	private CreatePostImpl createPost;
 
@@ -59,6 +62,13 @@ class CreatePostImplTest {
 		var post = createPost.execute( PostsPool.NEW_POST );
 
 		verify( postRepositoryAdapter ).save( PostsPool.NEW_POST );
+	}
+
+	@Test
+	void executeWhenProcessorExecutedShouldUpdateUser() {
+		var post = createPost.execute( PostsPool.NEW_POST );
+
+		verify( updateUser ).execute( PostsPool.NEW_POST );
 	}
 
 }
