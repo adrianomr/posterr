@@ -143,3 +143,7 @@ copy the command and run it on terminal, into project root directory.
 To develop using IDE, it is required that java 17, maven, docker and docker-compose are
 installed. It is also required that IDE is installed and configured. Then, it is possible
 to run make start-dev-env in the project root directory. And run the project using the IDE.
+
+## Swagger
+
+Swagger is available under: http://localhost:8080/swagger-ui/#/

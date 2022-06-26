@@ -9,4 +9,9 @@ spring:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/posterr}
     user: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jpa.hibernate.ddl-auto: validate
+server:
+  contextPath: /posterr

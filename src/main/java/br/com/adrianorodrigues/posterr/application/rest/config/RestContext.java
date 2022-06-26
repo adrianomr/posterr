@@ -4,7 +4,7 @@ import static java.util.Objects.isNull;
 
 import javax.servlet.http.HttpServletRequest;
 
-import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
@@ -13,19 +13,19 @@ import br.com.adrianorodrigues.posterr.exceptions.UnathorizedException;
 
 @Component
 @RequestScope
-@Getter
+@Slf4j
 public class RestContext {
 
 	private String userId;
 
-	public void initializeFromHeaders(HttpServletRequest request){
+	public void initializeFromHeaders(HttpServletRequest request) {
 		userId = request.getHeader( "x-user-id" );
-		validate();
 	}
 
-	private void validate() {
-		if(isNull(userId))
+	public String getUserId() {
+		if (isNull( userId )) {
 			throw new UnathorizedException( "x-user-id must not be null" );
+		}
+		return userId;
 	}
-
 }
