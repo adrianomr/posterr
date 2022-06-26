@@ -2,7 +2,11 @@ spring:
   application:
     name: posterr
   datasource:
-    url: jdbc:postgresql://localhost:5432/posterr
-    username: postgres
-    password: postgres
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/posterr}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+  liquibase:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/posterr}
+    user: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
   jpa.hibernate.ddl-auto: validate

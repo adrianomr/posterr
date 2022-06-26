@@ -126,3 +126,17 @@ to prevent that micorservices lose data and have performance issues, once events
 can be processed asynchronously, according to each microservice capability. And, if
 an event can't be processed because a service failure, it can be stored into a DLQ
 to be investigated by engineering teams.
+
+## Run application
+
+### Locally
+
+To run the application locally the only requirement is to have docker and docker-compose 
+installed. Then run make start in the project root directory, or access Makefile,
+copy the command and run it on terminal, into project root directory.
+
+### Dev environment
+
+To develop using IDE, it is required that java 17, maven, docker and docker-compose are
+installed. It is also required that IDE is installed and configured. Then, it is possible
+to run make start-dev-env in the project root directory. And run the project using the IDE.

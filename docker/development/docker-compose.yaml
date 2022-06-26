@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  database:
+    container_name: postgres_posterr_dev
+    image: postgres:11.5
+    environment:
+      POSTGRES_DB: posterr
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
