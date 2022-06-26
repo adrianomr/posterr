@@ -72,4 +72,13 @@ public class User {
 		return Objects.equals( lastPostDate, LocalDate.now() );
 	}
 
+	private boolean dontHasPostsDoneToday() {
+		return !hasPostsDoneToday();
+	}
+
+	public User updateTotals() {
+		if(dontHasPostsDoneToday())
+			dailyPostsAmount = 0;
+		return this;
+	}
 }

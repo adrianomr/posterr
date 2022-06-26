@@ -288,6 +288,25 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 				.all();
 	}
 
+	@Test
+	void findPostsPaginatedShouldReturnPostData() {
+
+		RestAssured.given()
+				.header( "x-user-id", UserBuilder.buildUser1().getId().toString() )
+				.param( "myPosts", true )
+				.accept( ContentType.JSON )
+				.contentType( ContentType.JSON )
+				.get( "/posts" )
+				.then()
+				.statusCode( HttpStatus.OK.value() )
+				.body( "data[0].id", equalTo( savedPost.getId().toString() ) )
+				.body( "data[0].content", equalTo( savedPost.getContent() ) )
+				.body( "data[0].type", equalTo( savedPost.getType().toString() ) )
+				.body( "data[0].originalPostId", equalTo( savedPost.getOriginalPost() ) )
+				.log()
+				.all();
+	}
+
 	private Response executePostRequest(PostDto post) {
 		return executePostRequest( post, UserBuilder.buildUser1().getId().toString() );
 	}

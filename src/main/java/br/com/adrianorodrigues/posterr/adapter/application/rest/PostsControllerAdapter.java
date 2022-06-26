@@ -11,7 +11,7 @@ import br.com.adrianorodrigues.posterr.application.rest.dto.PostDto;
 import br.com.adrianorodrigues.posterr.application.rest.dto.PostFilterDto;
 import br.com.adrianorodrigues.posterr.domain.PaginationFilter;
 import br.com.adrianorodrigues.posterr.mapper.application.rest.PostDtoMapper;
-import br.com.adrianorodrigues.posterr.mapper.application.rest.PostFilterDtoMapper;
+import br.com.adrianorodrigues.posterr.mapper.domain.PostFilterDtoMapper;
 import br.com.adrianorodrigues.posterr.mapper.domain.PostMapper;
 import br.com.adrianorodrigues.posterr.usecase.post.create.CreatePost;
 import br.com.adrianorodrigues.posterr.usecase.post.find.FindPostsWithPagination;

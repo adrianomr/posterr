@@ -1,4 +1,4 @@
-package br.com.adrianorodrigues.posterr.mapper.application.rest;
+package br.com.adrianorodrigues.posterr.mapper.domain;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
