@@ -18,6 +18,8 @@ import br.com.adrianorodrigues.posterr.enums.PostType;
 public class PostDto {
 	private UUID id;
 	private String content;
+	private String originalPostContent;
+	private UUID originalPostUserId;
 	private PostType type;
 	private UUID originalPostId;
 }

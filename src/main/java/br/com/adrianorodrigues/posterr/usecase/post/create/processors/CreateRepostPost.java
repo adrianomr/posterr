@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import br.com.adrianorodrigues.posterr.adapter.infra.repository.PostRepositoryAdapter;
 import br.com.adrianorodrigues.posterr.domain.Post;
 import br.com.adrianorodrigues.posterr.enums.PostType;
+import br.com.adrianorodrigues.posterr.exceptions.DataValidationException;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +18,8 @@ public class CreateRepostPost implements CreatePostProcessor {
 	@Override public Post execute(Post post) {
 		var repostedPost = postRepositoryAdapter
 				.findById( post.getOriginalPost() )
-				.orElse( null );
-		post.setOriginalPost( repostedPost );
+				.orElseThrow( () -> new DataValidationException( "originalPost", "Post must have a original post" ) );
+		post.addOriginalPost( repostedPost );
 		post.validateOriginalPost();
 		return post;
 	}

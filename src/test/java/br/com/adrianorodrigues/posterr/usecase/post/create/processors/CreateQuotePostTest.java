@@ -38,6 +38,8 @@ class CreateQuotePostTest {
 		assertThat( post )
 				.hasFieldOrPropertyWithValue( "content", newQuotePost.getContent() )
 				.hasFieldOrPropertyWithValue( "type", newQuotePost.getType() )
+				.hasFieldOrPropertyWithValue( "originalPostContent", CREATED_POST.getContent() )
+				.hasFieldOrPropertyWithValue( "originalPostUserId", CREATED_POST.getUserId() )
 				.hasFieldOrPropertyWithValue( "originalPost", CREATED_POST );
 	}
 

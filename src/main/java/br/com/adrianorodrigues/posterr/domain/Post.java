@@ -52,6 +52,10 @@ public class Post {
 	@JoinColumn(name = "original_post_id")
 	private Post originalPost;
 	@Column
+	private String originalPostContent;
+	@Column
+	private UUID originalPostUserId;
+	@Column
 	private UUID userId;
 	@Column
 	private Instant createdAt;
@@ -64,21 +68,7 @@ public class Post {
 	}
 
 	public void validateOriginalPost() {
-		if (originalPost == null) {
-			throw new DataValidationException( "originalPost", "Post must have a original post" );
-		}
 		validateOriginalPostType();
-	}
-
-	private void validateOriginalPostType() {
-		if (isOriginalPostTypeValid()) {
-			throw new DataValidationException( "originalPost.type", "Post type cannot be: " + originalPost.getType() );
-		}
-	}
-
-	private boolean isOriginalPostTypeValid() {
-		List<PostType> invalidTypes = invalidPostTypes.get( type );
-		return invalidTypes.stream().anyMatch( postType -> postType == originalPost.getType() );
 	}
 
 	public void validateRegularPost() {
@@ -91,5 +81,22 @@ public class Post {
 		if (nonNull( originalPostId )) {
 			originalPost = Post.builder().id( originalPostId ).build();
 		}
+	}
+
+	public void addOriginalPost(Post originalPost) {
+		this.originalPostContent = originalPost.getContent();
+		this.originalPostUserId = originalPost.getUserId();
+		this.originalPost = originalPost;
+	}
+
+	private void validateOriginalPostType() {
+		if (isOriginalPostTypeValid()) {
+			throw new DataValidationException( "originalPost.type", "Post type cannot be: " + originalPost.getType() );
+		}
+	}
+
+	private boolean isOriginalPostTypeValid() {
+		List<PostType> invalidTypes = invalidPostTypes.get( type );
+		return invalidTypes.stream().anyMatch( postType -> postType == originalPost.getType() );
 	}
 }

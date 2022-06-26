@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS post (
 	content VARCHAR(777) NULL,
 	type VARCHAR(50) NULL,
 	original_post_id UUID,
+	original_post_content VARCHAR(777),
+	original_post_user_id UUID,
 	user_id UUID NOT NULL,
 	created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
 	CONSTRAINT post_pkey PRIMARY KEY (id)

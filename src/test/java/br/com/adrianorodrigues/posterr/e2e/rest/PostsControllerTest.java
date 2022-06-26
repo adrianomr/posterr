@@ -271,7 +271,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 		var date = Instant.now();
 		for (int i = 0; i < 3; i++) {
 			var post = PostsDtoBuilder.buildNewPost();
-			executePostRequest( post , "a4ce0058-cd5d-456b-8f30-7fd85e3650d5");
+			executePostRequest( post, "a4ce0058-cd5d-456b-8f30-7fd85e3650d5" );
 		}
 		RestAssured.given()
 				.header( "x-user-id", "a4ce0058-cd5d-456b-8f30-7fd85e3650d5" )
@@ -303,6 +303,32 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 				.body( "data[0].content", equalTo( savedPost.getContent() ) )
 				.body( "data[0].type", equalTo( savedPost.getType().toString() ) )
 				.body( "data[0].originalPostId", equalTo( savedPost.getOriginalPost() ) )
+				.log()
+				.all();
+	}
+
+	@Test
+	void findPostsPaginatedWhenQuotePostSavedShouldReturnPostData() {
+		var post = PostBuilder.buildNewQuotePost();
+		post.setOriginalPost( savedPost );
+		post.setOriginalPostContent( savedPost.getContent() );
+		post.setUserId( UserBuilder.buildUser1().getId() );
+		post.setOriginalPostUserId( UserBuilder.buildUser1().getId() );
+		postRepository.save(post);
+		RestAssured.given()
+				.header( "x-user-id", UserBuilder.buildUser1().getId().toString() )
+				.param( "myPosts", true )
+				.accept( ContentType.JSON )
+				.contentType( ContentType.JSON )
+				.get( "/posts" )
+				.then()
+				.statusCode( HttpStatus.OK.value() )
+				.body( "data[0].id", equalTo( post.getId().toString() ) )
+				.body( "data[0].content", equalTo( post.getContent() ) )
+				.body( "data[0].originalPostContent", equalTo( post.getOriginalPostContent() ) )
+				.body( "data[0].originalPostUserId", equalTo( post.getOriginalPostUserId().toString() ) )
+				.body( "data[0].type", equalTo( post.getType().toString() ) )
+				.body( "data[0].originalPostId", equalTo( post.getOriginalPost().getId().toString() ) )
 				.log()
 				.all();
 	}

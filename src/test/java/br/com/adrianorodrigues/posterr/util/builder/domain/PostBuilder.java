@@ -36,6 +36,7 @@ public class PostBuilder {
 				.id( UUID.randomUUID() )
 				.content( "CREATED POST" )
 				.type( PostType.REGULAR )
+				.userId( UserBuilder.buildUser1().getId() )
 				.build();
 	}
 
