@@ -129,6 +129,9 @@ to be investigated by engineering teams.
 
 ## Run application
 
+To test application with postman, there is a collection in project root directory with
+a few request examples.
+
 ### Locally
 
 To run the application locally the only requirement is to have docker and docker-compose 
