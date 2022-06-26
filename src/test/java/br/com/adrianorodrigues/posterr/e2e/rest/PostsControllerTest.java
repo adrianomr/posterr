@@ -3,6 +3,8 @@ package br.com.adrianorodrigues.posterr.e2e.rest;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.time.Instant;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -148,14 +150,155 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 				.statusCode( HttpStatus.UNAUTHORIZED.value() );
 	}
 
-	private Response executePostRequest(PostDto post) {
-		return RestAssured.given()
+	@Test
+	void findPostsPaginated() {
+		for (int i = 0; i < 5; i++) {
+			var post = PostsDtoBuilder.buildNewPost();
+			executePostRequest( post );
+		}
+		RestAssured.given()
 				.header( "x-user-id", UserBuilder.buildUser1().getId().toString() )
+				.accept( ContentType.JSON )
+				.contentType( ContentType.JSON )
+				.get( "/posts" )
+				.then()
+				.statusCode( HttpStatus.OK.value() )
+				.body( "totalPages", equalTo( 1 ) )
+				.body( "totalElements", equalTo( 6 ) )
+				.log()
+				.all();
+	}
+
+	@Test
+	void findPostsPaginatedWhenPageSizeIs5ShouldReturnOnlyFiveElements() {
+		for (int i = 0; i < 5; i++) {
+			var post = PostsDtoBuilder.buildNewPost();
+			executePostRequest( post );
+		}
+		RestAssured.given()
+				.header( "x-user-id", UserBuilder.buildUser1().getId().toString() )
+				.param( "pageSize", 5 )
+				.accept( ContentType.JSON )
+				.contentType( ContentType.JSON )
+				.get( "/posts" )
+				.then()
+				.statusCode( HttpStatus.OK.value() )
+				.body( "totalPages", equalTo( 2 ) )
+				.body( "totalElements", equalTo( 5 ) )
+				.log()
+				.all();
+	}
+
+	@Test
+	void findPostsPaginatedWhenSecondPageRequestShouldReturnSecondPage() {
+		for (int i = 0; i < 15; i++) {
+			var post = PostBuilder.buildNewPost();
+			postRepository.save( post );
+		}
+		RestAssured.given()
+				.header( "x-user-id", UserBuilder.buildUser1().getId().toString() )
+				.param( "page", "2" )
+				.accept( ContentType.JSON )
+				.contentType( ContentType.JSON )
+				.get( "/posts" )
+				.then()
+				.statusCode( HttpStatus.OK.value() )
+				.body( "totalPages", equalTo( 2 ) )
+				.body( "totalElements", equalTo( 6 ) )
+				.body( "page", equalTo( 2 ) )
+				.log()
+				.all();
+	}
+
+	@Test
+	void findPostsPaginatedWhenFilteredByBeginDateShouldReturnPosts() {
+		for (int i = 0; i < 2; i++) {
+			var post = PostsDtoBuilder.buildNewPost();
+			executePostRequest( post );
+		}
+		var date = Instant.now();
+		for (int i = 0; i < 3; i++) {
+			var post = PostsDtoBuilder.buildNewPost();
+			executePostRequest( post );
+		}
+		RestAssured.given()
+				.header( "x-user-id", UserBuilder.buildUser1().getId().toString() )
+				.param( "beginDate", date.toString() )
+				.accept( ContentType.JSON )
+				.contentType( ContentType.JSON )
+				.get( "/posts" )
+				.then()
+				.statusCode( HttpStatus.OK.value() )
+				.body( "totalPages", equalTo( 1 ) )
+				.body( "totalElements", equalTo( 3 ) )
+				.body( "page", equalTo( 1 ) )
+				.log()
+				.all();
+	}
+
+	@Test
+	void findPostsPaginatedWhenFilteredByEndDateShouldReturnPosts() {
+		for (int i = 0; i < 3; i++) {
+			var post = PostsDtoBuilder.buildNewPost();
+			executePostRequest( post );
+		}
+		var date = Instant.now();
+		for (int i = 0; i < 3; i++) {
+			var post = PostsDtoBuilder.buildNewPost();
+			executePostRequest( post );
+		}
+		RestAssured.given()
+				.header( "x-user-id", UserBuilder.buildUser1().getId().toString() )
+				.param( "endDate", date.toString() )
+				.accept( ContentType.JSON )
+				.contentType( ContentType.JSON )
+				.get( "/posts" )
+				.then()
+				.statusCode( HttpStatus.OK.value() )
+				.body( "totalPages", equalTo( 1 ) )
+				.body( "totalElements", equalTo( 4 ) )
+				.body( "page", equalTo( 1 ) )
+				.log()
+				.all();
+	}
+
+	@Test
+	void findPostsPaginatedWhenFilteredByMyPostsShouldReturnOnlyUserPosts() {
+		for (int i = 0; i < 3; i++) {
+			var post = PostsDtoBuilder.buildNewPost();
+			executePostRequest( post );
+		}
+		var date = Instant.now();
+		for (int i = 0; i < 3; i++) {
+			var post = PostsDtoBuilder.buildNewPost();
+			executePostRequest( post , "a4ce0058-cd5d-456b-8f30-7fd85e3650d5");
+		}
+		RestAssured.given()
+				.header( "x-user-id", "a4ce0058-cd5d-456b-8f30-7fd85e3650d5" )
+				.param( "myPosts", true )
+				.accept( ContentType.JSON )
+				.contentType( ContentType.JSON )
+				.get( "/posts" )
+				.then()
+				.statusCode( HttpStatus.OK.value() )
+				.body( "totalPages", equalTo( 1 ) )
+				.body( "totalElements", equalTo( 3 ) )
+				.body( "page", equalTo( 1 ) )
+				.log()
+				.all();
+	}
+
+	private Response executePostRequest(PostDto post) {
+		return executePostRequest( post, UserBuilder.buildUser1().getId().toString() );
+	}
+
+	private Response executePostRequest(PostDto post, String userId) {
+		return RestAssured.given()
+				.header( "x-user-id", userId )
 				.accept( ContentType.JSON )
 				.contentType( ContentType.JSON )
 				.body( post )
 				.post( "/posts" );
 	}
-
 
 }

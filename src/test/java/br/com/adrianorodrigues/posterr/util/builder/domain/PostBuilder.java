@@ -1,5 +1,6 @@
 package br.com.adrianorodrigues.posterr.util.builder.domain;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import br.com.adrianorodrigues.posterr.domain.Post;
@@ -12,6 +13,7 @@ public class PostBuilder {
 				.content( "CREATED POST" )
 				.type( PostType.REGULAR )
 				.userId( UserBuilder.buildUser1().getId() )
+				.createdAt( Instant.now() )
 				.build();
 	}
 

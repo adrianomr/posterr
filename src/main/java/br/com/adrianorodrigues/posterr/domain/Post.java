@@ -2,6 +2,7 @@ package br.com.adrianorodrigues.posterr.domain;
 
 import static java.util.Objects.nonNull;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -52,6 +53,8 @@ public class Post {
 	private Post originalPost;
 	@Column
 	private UUID userId;
+	@Column
+	private Instant createdAt;
 
 	private static Map<PostType, List<PostType>> buildInvalidPostTypes() {
 		var invalids = new EnumMap<PostType, List<PostType>>( PostType.class );
