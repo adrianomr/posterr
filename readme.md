@@ -78,6 +78,10 @@ during tests phase. Project lines coverage is approximately 92% (Measured with i
 
 This sections will bring insides on what could be done to improve the project.
 
+### Quota
+
+Daily quota could be parametrized as a env var
+
 ### Tests
 
 More unit and integration tests could be added, although the coverage is high. Testing layers
