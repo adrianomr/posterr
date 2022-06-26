@@ -7,7 +7,9 @@ import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.adrianorodrigues.posterr.domain.Page;
@@ -39,7 +41,7 @@ public class PostRepositoryAdapterImpl implements PostRepositoryAdapter {
 	}
 
 	@Override public Page<Post> findAllPostsPaginated(PaginationFilter<PostFilter> paginationFilter) {
-		var pageable = buildPage(paginationFilter);
+		var pageable = buildPage( paginationFilter );
 		var page = repository.findAllPaginatedPosts( buildFilter( paginationFilter.getFilter() ), pageable );
 		return buildPage( pageable, page );
 	}
@@ -52,9 +54,10 @@ public class PostRepositoryAdapterImpl implements PostRepositoryAdapter {
 				.totalPages( page.getTotalPages() )
 				.build();
 	}
+
 	private Pageable buildPage(PaginationFilter<PostFilter> paginationFilter) {
-		return Pageable.ofSize( paginationFilter.getPageSize() )
-				.withPage( paginationFilter.getPage() - 1 )
+		return PageRequest.of( paginationFilter.getPage() - 1, paginationFilter.getPageSize(),
+						Sort.by( Sort.Direction.DESC, "createdAt" ) )
 				.toOptional()
 				.orElse( Pageable.ofSize( paginationFilter.getPageSize() ).first() );
 	}

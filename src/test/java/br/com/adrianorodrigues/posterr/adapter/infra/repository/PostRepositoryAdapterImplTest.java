@@ -132,6 +132,23 @@ class PostRepositoryAdapterImplTest extends AbstractContextMockDataBase {
 				.hasSize( 1 );
 	}
 
+	@Test
+	void findAllPostsPaginatedShouldReturnPostsInOrderFromNewerToOlder() {
+		Instant date = Instant.now().minus( 2, ChronoUnit.DAYS );
+		var filter = buildDefaultFilter( 1 );
+		var newPost = PostBuilder.buildNewPost();
+		newPost.setCreatedAt( Instant.now() );
+		var oldPost = PostBuilder.buildNewPost();
+		oldPost.setCreatedAt( date );
+		repository.save( oldPost );
+		repository.save( newPost );
+
+		var posts = postRepositoryAdapter.findAllPostsPaginated( filter );
+
+		assertThat( posts.getElements().get( 0 ).getId() )
+				.isEqualTo( newPost.getId() );
+	}
+
 	private PaginationFilter<PostFilter> buildUserFilter(UUID id) {
 		return buildFilter( 1, PostFilter.builder().userId( id ).build() );
 	}
