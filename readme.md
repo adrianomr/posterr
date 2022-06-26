@@ -117,7 +117,12 @@ When it is too hard to scale the monolith application, it is time to change to a
 architecture with database segregation. This approach will help to scale only the needed 
 services. Example: A user will probably use more post features than user profile features.
 So, services related to posts will have a higher demand, and can be escalated alone, without
-impacting user services in a microservices architecture. A CQRS approach could also be used
-with event sourcing and eventual consistency, to prevent that micorservices lose data 
-and have performance issues, once events can be processed asynchronously, according to each
-microservice capability.
+impacting user services in a microservices architecture. Also, database segregation
+would ease database usage, once a request to user profile data won't need to fetch
+data from posts database.
+
+A CQRS approach could also be used with event sourcing and eventual consistency, 
+to prevent that micorservices lose data and have performance issues, once events 
+can be processed asynchronously, according to each microservice capability. And, if
+an event can't be processed because a service failure, it can be stored into a DLQ
+to be investigated by engineering teams.
