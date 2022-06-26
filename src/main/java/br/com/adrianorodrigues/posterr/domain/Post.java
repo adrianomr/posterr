@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -68,6 +69,7 @@ public class Post {
 	}
 
 	public void validateOriginalPost() {
+		validateOriginalUser();
 		validateOriginalPostType();
 	}
 
@@ -87,6 +89,13 @@ public class Post {
 		this.originalPostContent = originalPost.getContent();
 		this.originalPostUserId = originalPost.getUserId();
 		this.originalPost = originalPost;
+	}
+
+	private void validateOriginalUser() {
+		if (Objects.equals(originalPost.getUserId(), userId)) {
+			throw new DataValidationException( "originalPost.userId",
+					"Original post user id has to be different from current user id" );
+		}
 	}
 
 	private void validateOriginalPostType() {

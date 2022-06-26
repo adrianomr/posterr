@@ -30,6 +30,7 @@ import io.restassured.response.Response;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PostsControllerTest extends AbstractContextMockDataBase {
 
+	public static final String USER_2_ID = "a4ce0058-cd5d-456b-8f30-7fd85e3650d5";
 	@LocalServerPort
 	private int port;
 	@Autowired
@@ -86,7 +87,7 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 		var post = PostDtoMapper.INSTANCE.map( PostsDtoBuilder.buildNewQuotePostWithoutOriginalPost() );
 		post.setOriginalPostId( savedPost.getId() );
 
-		executePostRequest( post )
+		executePostRequest( post, USER_2_ID )
 				.then()
 				.statusCode( HttpStatus.OK.value() )
 				.body( "id", notNullValue() )
@@ -96,17 +97,37 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 	}
 
 	@Test
+	void createPostWhenQuoteWithOriginalPostSameUserShouldReturnBadRequest() {
+		var post = PostDtoMapper.INSTANCE.map( PostsDtoBuilder.buildNewQuotePostWithoutOriginalPost() );
+		post.setOriginalPostId( savedPost.getId() );
+
+		executePostRequest( post )
+				.then()
+				.statusCode( HttpStatus.BAD_REQUEST.value() );
+	}
+
+	@Test
 	void createPostWhenRepostWithOriginalPostShouldReturnSuccess() {
 		var post = PostDtoMapper.INSTANCE.map( PostsDtoBuilder.buildNewRepostPostWithoutOriginalPost() );
 		post.setOriginalPostId( savedPost.getId() );
 
-		executePostRequest( post )
+		executePostRequest( post, USER_2_ID )
 				.then()
 				.statusCode( HttpStatus.OK.value() )
 				.body( "id", notNullValue() )
 				.body( "content", equalTo( post.getContent() ) )
 				.body( "type", equalTo( post.getType().toString() ) )
 				.body( "originalPostId", equalTo( savedPost.getId().toString() ) );
+	}
+
+	@Test
+	void createPostWhenRepostWithOriginalPostSameUserShouldReturnBadRequest() {
+		var post = PostDtoMapper.INSTANCE.map( PostsDtoBuilder.buildNewRepostPostWithoutOriginalPost() );
+		post.setOriginalPostId( savedPost.getId() );
+
+		executePostRequest( post )
+				.then()
+				.statusCode( HttpStatus.BAD_REQUEST.value() );
 	}
 
 	@Test
@@ -271,10 +292,10 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 		var date = Instant.now();
 		for (int i = 0; i < 3; i++) {
 			var post = PostsDtoBuilder.buildNewPost();
-			executePostRequest( post, "a4ce0058-cd5d-456b-8f30-7fd85e3650d5" );
+			executePostRequest( post, USER_2_ID );
 		}
 		RestAssured.given()
-				.header( "x-user-id", "a4ce0058-cd5d-456b-8f30-7fd85e3650d5" )
+				.header( "x-user-id", USER_2_ID )
 				.param( "myPosts", true )
 				.accept( ContentType.JSON )
 				.contentType( ContentType.JSON )
