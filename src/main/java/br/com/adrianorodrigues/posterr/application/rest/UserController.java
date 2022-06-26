@@ -3,6 +3,7 @@ package br.com.adrianorodrigues.posterr.application.rest;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,9 +19,10 @@ public class UserController {
 	private final UserControllerAdapter adapter;
 	private final RestContext restContext;
 
-	@GetMapping("current")
-	public UserDto getPostsPaginated(){
-		var userId = restContext.getUserId();
+	@GetMapping("{userId}")
+	public UserDto getUserDetails(@PathVariable String userId){
+		if(userId.equalsIgnoreCase( "current" ))
+			userId = restContext.getUserId();
 		return adapter.findCurrent( userId );
 	}
 

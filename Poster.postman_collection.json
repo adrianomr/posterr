@@ -49,12 +49,12 @@
 							{
 								"key": "x-user-id",
 								"type": "text",
-								"value": "d201e18b-83b0-4ea1-928d-81dee88eb8eb"
+								"value": "a4ce0058-cd5d-456b-8f30-7fd85e3650d5"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"content\": \"Test\",\n    \"type\": \"REPOST\",\n    \"originalPostId\": \"5b88dbe9-41b9-486a-9a22-45665d594084\"\n}",
+							"raw": "{\n    \"content\": \"Test\",\n    \"type\": \"REPOST\",\n    \"originalPostId\": \"7341bbd7-c8f7-44ea-acb0-ea101393c945\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -82,12 +82,12 @@
 							{
 								"key": "x-user-id",
 								"type": "text",
-								"value": "d201e18b-83b0-4ea1-928d-81dee88eb8eb"
+								"value": "a4ce0058-cd5d-456b-8f30-7fd85e3650d5"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"content\": \"Test\",\n    \"type\": \"QUOTE\"\n}",
+							"raw": "{\n    \"content\": \"Test\",\n    \"type\": \"QUOTE\",\n    \"originalPostId\": \"7341bbd7-c8f7-44ea-acb0-ea101393c945\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -156,6 +156,31 @@
 							"path": [
 								"users",
 								"current"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get other user details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-user-id",
+								"type": "text",
+								"value": "d201e18b-83b0-4ea1-928d-81dee88eb8eb"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/users/a4ce0058-cd5d-456b-8f30-7fd85e3650d5",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"a4ce0058-cd5d-456b-8f30-7fd85e3650d5"
 							]
 						}
 					},
