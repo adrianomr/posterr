@@ -1,4 +1,5 @@
 # Posterr application
+Author: Adriano de Mello Rodrigues
 
 Posterr is a social media application very similar to twitter, but with far fewer features.
 This is a backend solution built in Java 17 to allow the following features:
