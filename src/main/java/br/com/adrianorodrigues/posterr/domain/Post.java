@@ -121,6 +121,6 @@ public class Post {
 
 	private void validateContentIsNotNull() {
 		if(isNull( content))
-			throw new DataValidationException( "content", "Max content cannot be null" );
+			throw new DataValidationException( "content", "Content cannot be null" );
 	}
 }
