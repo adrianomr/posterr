@@ -21,6 +21,8 @@ public class CreatePostImpl implements CreatePost {
 	@Transactional
 	@Override
 	public Post execute(Post newPost) {
+		newPost.validate();
+
 		updateUser.execute(newPost);
 
 		Post post = processorFactory

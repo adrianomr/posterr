@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import java.time.Instant;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -169,6 +170,24 @@ class PostsControllerTest extends AbstractContextMockDataBase {
 				.post( "/posts" )
 				.then()
 				.statusCode( HttpStatus.UNAUTHORIZED.value() );
+	}
+
+	@Test
+	void createPostWhenContentIsToBigShouldReturnBadRequest() {
+		var post = PostsDtoBuilder.buildNewPost();
+		post.setContent( StringUtils.repeat("a", 778) );
+		executePostRequest( post )
+				.then()
+				.statusCode( HttpStatus.BAD_REQUEST.value() );
+	}
+
+	@Test
+	void createPostWhenContentIsNullShouldReturnBadRequest() {
+		var post = PostsDtoBuilder.buildNewPost();
+		post.setContent( null );
+		executePostRequest( post )
+				.then()
+				.statusCode( HttpStatus.BAD_REQUEST.value() );
 	}
 
 	@Test

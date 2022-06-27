@@ -1,5 +1,6 @@
 package br.com.adrianorodrigues.posterr.domain;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import java.time.Instant;
@@ -68,6 +69,11 @@ public class Post {
 		return invalids;
 	}
 
+	public void validate(){
+		validateContentIsNotNull();
+		validateContentSize();
+	}
+
 	public void validateOriginalPost() {
 		validateOriginalUser();
 		validateOriginalPostType();
@@ -107,5 +113,14 @@ public class Post {
 	private boolean isOriginalPostTypeValid() {
 		List<PostType> invalidTypes = invalidPostTypes.get( type );
 		return invalidTypes.stream().anyMatch( postType -> postType == originalPost.getType() );
+	}
+	private void validateContentSize() {
+		if(content.length() > 777)
+			throw new DataValidationException( "content", "Max content size is 777" );
+	}
+
+	private void validateContentIsNotNull() {
+		if(isNull( content))
+			throw new DataValidationException( "content", "Max content cannot be null" );
 	}
 }
