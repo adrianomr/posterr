@@ -69,9 +69,10 @@ public class Post {
 		return invalids;
 	}
 
-	public void validate(){
+	public void validate() {
 		validateContentIsNotNull();
 		validateContentSize();
+		validatePostType();
 	}
 
 	public void validateOriginalPost() {
@@ -98,7 +99,7 @@ public class Post {
 	}
 
 	private void validateOriginalUser() {
-		if (Objects.equals(originalPost.getUserId(), userId)) {
+		if (Objects.equals( originalPost.getUserId(), userId )) {
 			throw new DataValidationException( "originalPost.userId",
 					"Original post user id has to be different from current user id" );
 		}
@@ -114,13 +115,21 @@ public class Post {
 		List<PostType> invalidTypes = invalidPostTypes.get( type );
 		return invalidTypes.stream().anyMatch( postType -> postType == originalPost.getType() );
 	}
+
 	private void validateContentSize() {
-		if(content.length() > 777)
+		if (content.length() > 777) {
 			throw new DataValidationException( "content", "Max content size is 777" );
+		}
 	}
 
 	private void validateContentIsNotNull() {
-		if(isNull( content))
+		if (isNull( content )) {
 			throw new DataValidationException( "content", "Content cannot be null" );
+		}
+	}
+
+	private void validatePostType() {
+		if (isNull( type ))
+			throw new DataValidationException( "type", "Type cannot be null" );
 	}
 }
